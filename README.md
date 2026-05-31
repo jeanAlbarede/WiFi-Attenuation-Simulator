@@ -41,7 +41,3 @@ Terminal: `custom` or `best` → band → wall type → clutter. Editor: **left-
 | `gui.py` | 50×50 floor editor |
 | `simFuncs.py` | `calc_p0`, ray wall loss, `simuSignal` |
 | `inAndOut.py` | Router presets, I/O, heatmap |
-
-## Requirements
-
-Python 3, `numpy`, `matplotlib`. Keep all `.py` files beside `wifiSim.py`. **Push the `img/` folder** with the repo so GitHub can load the images above.
