@@ -1,51 +1,47 @@
-# 📶 Wi-Fi Signal Strength Simulator (dBm) w/ Wall Attenuation (Generates Heatmap)
+# Wi-Fi Coverage Simulation
 
-A Python-based simulation tool that visualizes Wi-Fi signal propagation. It allows users to design custom floor plans, place routers, and generate signal heatmaps based on real-world physics, including wall attenuation and frequency bands.
+Python desktop tool that models indoor Wi-Fi propagation in **dBm** on a user-drawn floor plan. Compare router placement, band choice, and building materials before deployment.
 
-## ✨ Features
+## Overview
 
-  * **Interactive Floor Plan Editor:** Draw walls and place multiple routers using a simple GUI.
-  * **Real-World Presets:** Choose from best-selling routers (TP-Link AX1800, Deco X55, GL-iNet Opal) or configure custom Tx power/Gain specs.
-  * **Physics-Based Simulation:** Calculates signal loss based on:
-      * Frequency (2.4GHz vs 5.0GHz).
-      * Wall Materials (Drywall, Brick, Concrete).
-      * Room Clutter (Empty, Medium, Heavy).
-  * **Visual Heatmaps:** Generates a color-coded signal strength map (dBm) overlaying your floor plan.
+Configure real or custom router specs, sketch walls, place access points, and view a **dBm heatmap** on that layout. Multi-AP setups use a best-server model (strongest signal per cell). Course project with full write-up in [`WiFi Attenuation Sim Report.pdf`](WiFi%20Attenuation%20Sim%20Report.pdf).
 
-## Requirements
-
-You will need Python installed along with the following libraries:
+## How to use
 
 ```bash
 pip install numpy matplotlib
-```
-
-## 🚀 How to Run
-
-1.  Clone the repository or download the files.
-2.  Run the main simulation script:
-
-<!-- end list -->
-
-```bash
 python wifiSim.py
 ```
 
-3.  **Configuration:** Follow the terminal prompts to select your router model, frequency band, and clutter level.
-4.  **Map Editor:** A window will open.
-      * **Left Click:** Draw Wall.
-      * **Right Click:** Remove Wall.
-      * **Middle Click:** Move existing router.
-      * **Buttons:** Add or Remove routers dynamically.
-      * **Enter:** Finish editing and run simulation.
+Terminal: `custom` or `best` → band → wall type → clutter. Editor: **left-click** walls, **right-click** erase, **middle-click** move router; add/remove APs; **Enter** to run.
 
-## 📂 Project Structure
+## Screenshots
 
-  * `wifiSim.py`: The main entry point. Orchestrates the inputs, editor, and simulation.
-  * `gui.py`: Handles the interactive map editor (walls and router placement).
-  * `simFuncs.py`: Contains the physics algorithms for path loss and wall attenuation.
-  * `inAndOut.py`: Manages user inputs, router specifications, and heatmap plotting.
+| Floor plan editor | Signal heatmap (dBm) |
+| :---: | :---: |
+| ![Interactive editor — walls and router placement](img/floorUserInput.png) | ![Simulation output — received power heatmap](img/floorSimResult.png) |
 
------
+![Example reference floor plan](img/floorplan.png)
 
-**Note:** Ensure all `.py` files are in the same directory before running.
+![Application flow — config, editor, simulation, heatmap](img/flowchart.png)
+
+## Technical highlights
+
+| Area | Implementation |
+|------|----------------|
+| Reference power | Friis at 1 m: P₀ = Pₜ + Gₜ − 20·log₁₀(f) − 147.55 |
+| Path loss | Log-distance with clutter exponent n = 1.6 / 2.5 / 3.5 |
+| Walls | Ray sampling; drywall 5 · brick 12 · concrete 20 (dB per step) |
+| Multi-AP | Per-cell maximum across routers |
+| Stack | NumPy + Matplotlib |
+
+| File | Role |
+|------|------|
+| `wifiSim.py` | CLI → editor → simulate → plot |
+| `gui.py` | 50×50 floor editor |
+| `simFuncs.py` | `calc_p0`, ray wall loss, `simuSignal` |
+| `inAndOut.py` | Router presets, I/O, heatmap |
+
+## Requirements
+
+Python 3, `numpy`, `matplotlib`. Keep all `.py` files beside `wifiSim.py`. **Push the `img/` folder** with the repo so GitHub can load the images above.
